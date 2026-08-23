@@ -1,0 +1,110 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --accent: #d9b87c;
+  --accent-soft: #e8d5ae;
+  --bg: #0a0d18;
+  --surface: #1a2138;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  @apply font-body antialiased;
+  background: var(--bg);
+  color: #f0eae0;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+/* Barra de rolagem discreta */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(240, 234, 224, 0.15);
+  border-radius: 3px;
+}
+
+.font-accent {
+  color: var(--accent);
+}
+
+.text-glow {
+  text-shadow: 0 0 40px color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+.glass {
+  background: rgba(26, 33, 56, 0.55);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(240, 234, 224, 0.08);
+}
+
+.btn-primary {
+  @apply inline-flex items-center gap-2 rounded-full px-7 py-3 font-body text-sm tracking-wide transition-all duration-300;
+  background: linear-gradient(135deg, var(--accent), var(--accent-soft));
+  color: #171207;
+}
+.btn-primary:hover {
+  filter: brightness(1.08);
+  box-shadow: 0 0 32px color-mix(in srgb, var(--accent) 40%, transparent);
+}
+.btn-primary:focus-visible {
+  outline: 2px solid var(--accent-soft);
+  outline-offset: 3px;
+}
+
+.btn-ghost {
+  @apply inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm transition-colors duration-300;
+  border: 1px solid rgba(240, 234, 224, 0.2);
+  color: #f0eae0;
+}
+.btn-ghost:hover {
+  border-color: var(--accent);
+  color: var(--accent-soft);
+}
+.btn-ghost:focus-visible {
+  outline: 2px solid var(--accent-soft);
+  outline-offset: 3px;
+}
+
+/* Inputs do painel */
+.field {
+  @apply w-full rounded-lg px-3 py-2 text-sm text-pergaminho;
+  background: rgba(10, 13, 24, 0.6);
+  border: 1px solid rgba(240, 234, 224, 0.12);
+}
+.field:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.field-label {
+  @apply mb-1 block text-xs uppercase tracking-widest text-nevoa;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
