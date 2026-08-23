@@ -1,6 +1,7 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useContent } from "../store/contentStore";
+import { assetUrl } from "../utils/media";
 
 export interface MusicPlayerHandle {
   /** Chamado no clique de "Entrar no nosso mundo" — gesto do usuário libera o áudio */
@@ -64,7 +65,7 @@ const MusicPlayer = forwardRef<MusicPlayerHandle, { visible: boolean }>(
       if (!audio || !src) return;
       if (currentSrc.current !== src) {
         currentSrc.current = src;
-        audio.src = src;
+        audio.src = assetUrl(src) ?? src;
       }
       try {
         audio.volume = 0;

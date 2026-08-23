@@ -16,6 +16,33 @@ import { defaultContent } from "../data/defaultContent";
  */
 const STORAGE_KEY = "para-fernanda:content:v1";
 
+/**
+ * Conteúdo publicado: public/content.json.
+ * É o que Fernanda vê no site no ar. Para publicar suas edições, exporte o
+ * JSON no painel e substitua o arquivo public/content.json no repositório.
+ * O localStorage (suas edições no painel) sempre tem prioridade no SEU
+ * navegador, então você continua editando normalmente.
+ */
+let publishedContent: Partial<SiteContent> | null = null;
+
+function baseContent(): SiteContent {
+  return publishedContent ? deepMerge(defaultContent, publishedContent) : defaultContent;
+}
+
+export async function loadPublishedContent(): Promise<void> {
+  try {
+    const url = `${import.meta.env.BASE_URL || "/"}content.json`.replace(/\/{2,}/g, "/");
+    const res = await fetch(url, { cache: "no-cache" });
+    if (!res.ok) return;
+    const data = (await res.json()) as Partial<SiteContent>;
+    if (data && typeof data === "object" && Object.keys(data).length > 0) {
+      publishedContent = data;
+    }
+  } catch {
+    // Sem content.json: usa o conteúdo padrão do código. Tudo certo.
+  }
+}
+
 function deepMerge<T>(base: T, override: Partial<T>): T {
   if (Array.isArray(base) || Array.isArray(override)) {
     return (override as T) ?? base;
@@ -40,12 +67,12 @@ function deepMerge<T>(base: T, override: Partial<T>): T {
 export function loadContent(): SiteContent {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return defaultContent;
+    if (!raw) return baseContent();
     const parsed = JSON.parse(raw) as Partial<SiteContent>;
     // Mescla com o padrão para que novos campos nunca quebrem dados antigos
-    return deepMerge(defaultContent, parsed);
+    return deepMerge(baseContent(), parsed);
   } catch {
-    return defaultContent;
+    return baseContent();
   }
 }
 
@@ -70,7 +97,7 @@ export function exportContent(): string {
 export function importContent(json: string): boolean {
   try {
     const parsed = JSON.parse(json) as Partial<SiteContent>;
-    return saveContent(deepMerge(defaultContent, parsed));
+    return saveContent(deepMerge(baseContent(), parsed));
   } catch {
     return false;
   }
@@ -104,6 +131,17 @@ export function ContentProvider({ children }: { children: React.ReactNode }) {
     },
     []
   );
+
+  // Busca o conteúdo publicado (public/content.json), se existir
+  useEffect(() => {
+    let alive = true;
+    void loadPublishedContent().then(() => {
+      if (alive) setContent(loadContent());
+    });
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   // Sincroniza entre abas (ex.: painel aberto em uma aba, site em outra)
   useEffect(() => {

@@ -171,6 +171,10 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
             Sair
           </button>
         </div>
+        <p className="mt-2 text-[11px] leading-relaxed text-nevoa">
+          Para publicar suas edições no site no ar: clique em <strong>Exportar</strong> e
+          substitua o arquivo <code>public/content.json</code> do repositório pelo JSON baixado.
+        </p>
         <input
           ref={fileRef}
           type="file"

@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { fileToCompressedDataUrl } from "../utils/media";
+import { fileToCompressedDataUrl, assetUrl } from "../utils/media";
 
 export function Field({
   label,
@@ -129,7 +129,7 @@ export function ImageField({
       <div className="flex items-start gap-3">
         <div className="glass grid h-20 w-20 shrink-0 place-items-center overflow-hidden rounded-xl">
           {value ? (
-            <img src={value} alt="" className="h-full w-full object-cover" />
+            <img src={assetUrl(value)} alt="" className="h-full w-full object-cover" />
           ) : (
             <span className="text-[0.6rem] text-nevoa">sem foto</span>
           )}

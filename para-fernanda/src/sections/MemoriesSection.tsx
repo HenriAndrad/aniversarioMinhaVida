@@ -3,6 +3,7 @@ import { Reveal, Section, SectionTitle } from "../components/Reveal";
 import Modal from "../components/Modal";
 import { useContent, isPlaceholder } from "../store/contentStore";
 import type { Memory } from "../types/content";
+import { assetUrl } from "../utils/media";
 
 /**
  * "Momentos que eu guardo" — não é uma grade fria de fotos.
@@ -32,7 +33,7 @@ export default function MemoriesSection() {
             >
               {m.image ? (
                 <img
-                  src={m.image}
+                  src={assetUrl(m.image)}
                   alt={m.title}
                   loading="lazy"
                   className="aspect-square w-full object-cover transition-transform duration-700 group-hover:scale-105"
@@ -58,7 +59,7 @@ export default function MemoriesSection() {
           <div className="flex flex-col gap-4">
             {open.image && (
               <img
-                src={open.image}
+                src={assetUrl(open.image)}
                 alt={open.title}
                 loading="lazy"
                 className="max-h-80 w-full rounded-2xl object-cover"

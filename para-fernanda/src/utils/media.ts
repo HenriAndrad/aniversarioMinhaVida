@@ -30,3 +30,16 @@ export function fileToCompressedDataUrl(file: File, maxSize = 1280, quality = 0.
 export function newId(prefix: string): string {
   return `${prefix}${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
 }
+
+/**
+ * Ajusta caminhos absolutos (ex.: /assets/photos/foto.jpg) ao caminho base do
+ * site. Necessário quando o site é publicado numa subpasta, como no GitHub
+ * Pages (usuario.github.io/repositorio/). Data URLs e links http(s) passam
+ * intactos.
+ */
+export function assetUrl(path?: string): string | undefined {
+  if (!path) return path;
+  if (!path.startsWith("/") || path.startsWith("//")) return path;
+  const base = import.meta.env.BASE_URL || "/";
+  return base.replace(/\/$/, "") + path;
+}

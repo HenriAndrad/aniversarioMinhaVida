@@ -4,6 +4,7 @@ import { Reveal, Section, SectionTitle } from "../components/Reveal";
 import Modal from "../components/Modal";
 import { useContent, isPlaceholder } from "../store/contentStore";
 import type { Reason } from "../types/content";
+import { assetUrl } from "../utils/media";
 
 /**
  * "Por que eu amo você" — cada motivo é uma estrela na constelação.
@@ -81,7 +82,7 @@ export default function ReasonsSection() {
             </h3>
             {open.image && (
               <img
-                src={open.image}
+                src={assetUrl(open.image)}
                 alt=""
                 loading="lazy"
                 className="max-h-64 w-full rounded-2xl object-cover"

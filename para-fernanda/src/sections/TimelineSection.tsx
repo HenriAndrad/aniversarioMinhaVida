@@ -3,6 +3,7 @@ import { Reveal, Section, SectionTitle } from "../components/Reveal";
 import Modal from "../components/Modal";
 import { useContent, isPlaceholder } from "../store/contentStore";
 import type { TimelineEvent } from "../types/content";
+import { assetUrl } from "../utils/media";
 
 /**
  * Nossa história — linha vertical com pontos de luz.
@@ -78,14 +79,14 @@ export default function TimelineSection() {
           <div className="flex flex-col gap-4">
             {open.image && (
               <img
-                src={open.image}
+                src={assetUrl(open.image)}
                 alt={open.title}
                 loading="lazy"
                 className="max-h-72 w-full rounded-2xl object-cover"
               />
             )}
             {open.video && (
-              <video src={open.video} controls className="w-full rounded-2xl" preload="metadata" />
+              <video src={assetUrl(open.video)} controls className="w-full rounded-2xl" preload="metadata" />
             )}
             <p className="text-xs uppercase tracking-widest text-nevoa">
               {isPlaceholder(open.date) ? "" : open.date}

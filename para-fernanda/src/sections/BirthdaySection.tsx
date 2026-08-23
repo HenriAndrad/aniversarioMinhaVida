@@ -1,6 +1,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { Reveal, Section } from "../components/Reveal";
 import { useContent, isPlaceholder } from "../store/contentStore";
+import { assetUrl } from "../utils/media";
 
 function formatDate(iso: string): string {
   const d = new Date(`${iso}T00:00:00`);
@@ -65,7 +66,7 @@ export default function BirthdaySection() {
               style={{ boxShadow: "0 0 60px color-mix(in srgb, var(--accent) 25%, transparent)" }}
             >
               <img
-                src={b.photo}
+                src={assetUrl(b.photo)}
                 alt={content.relationship.herName}
                 loading="lazy"
                 className="aspect-[4/5] w-full object-cover"

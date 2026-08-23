@@ -59,17 +59,56 @@ O painel salva por cima deles; "Restaurar padrão" volta para esse arquivo.
 
 ## Importante: onde as edições ficam salvas
 
-As edições do painel ficam no **localStorage do navegador em que você editou**.
-Para publicar o site já personalizado para a Fernanda, você tem duas opções:
+As edições do painel ficam no **localStorage do navegador em que você editou** —
+ou seja, elas não viajam sozinhas para o site publicado.
 
-- **Opção simples:** edite tudo direto em `src/data/defaultContent.ts`
-  (pode usar Exportar no painel e copiar os valores do JSON para lá), rode
-  `npm run build` e publique a pasta `dist/` (Vercel, Netlify, GitHub Pages...).
-  Assim o conteúdo já vem embutido para qualquer dispositivo.
-- **Opção futura:** o armazenamento é isolado em `src/store/contentStore.tsx`
-  (funções `loadContent`/`saveContent`). Para sincronizar entre dispositivos,
-  basta trocar essas duas funções por chamadas a Supabase/Firebase — nenhuma
-  outra parte do código precisa mudar.
+Para publicar o conteúdo, o caminho mais fácil é:
+
+1. no painel, clique em **Exportar** (baixa um `.json` com tudo);
+2. substitua o arquivo **`public/content.json`** do repositório por esse JSON;
+3. faça commit e push — o site no ar passa a mostrar esse conteúdo.
+
+O site carrega `content.json` como base e o seu localStorage por cima, então
+você continua editando pelo painel normalmente no seu navegador.
+
+Alternativas: editar direto `src/data/defaultContent.ts` (o conteúdo fica
+embutido no build), ou trocar `loadContent`/`saveContent` em
+`src/store/contentStore.tsx` por chamadas a Supabase/Firebase — nenhuma outra
+parte do código precisa mudar.
+
+## Publicar no GitHub Pages (GitHub Actions)
+
+O workflow já está pronto em `.github/workflows/deploy.yml`.
+
+1. Crie o repositório no GitHub e suba o projeto:
+
+   ```bash
+   git init
+   git add .
+   git commit -m "Site para a Fernanda"
+   git branch -M main
+   git remote add origin https://github.com/SEU-USUARIO/SEU-REPO.git
+   git push -u origin main
+   ```
+
+2. No GitHub, vá em **Settings → Pages** e, em *Build and deployment*, escolha
+   **Source: GitHub Actions**. (Só precisa fazer isso uma vez.)
+3. Pronto: cada push no branch `main` roda o build e publica. Acompanhe pela
+   aba **Actions**; o endereço fica
+   `https://SEU-USUARIO.github.io/SEU-REPO/`.
+
+Observações:
+
+- se o seu branch principal se chamar `master`, troque o nome no início do
+  workflow;
+- `vite.config.ts` usa `base: "./"`, então o site funciona tanto em subpasta
+  (`/SEU-REPO/`) quanto em domínio próprio, sem configurar nada;
+- se quiser deixar o repositório **privado**, o Pages exige plano pago —
+  nesse caso use Vercel ou Netlify (também gratuitos e com repositório
+  privado);
+- a rota do painel é `.../#/admin`. A senha protege contra curiosos, mas o
+  site é público: não coloque nada ali que você não queira que outra pessoa
+  possa ver.
 
 ## Estrutura
 
