@@ -3,36 +3,50 @@ import { useContent, exportContent, importContent, resetContent, loadContent } f
 import type { SiteContent } from "../types/content";
 import {
   AreaField,
+  AudioRecorderField,
   Field,
   ImageField,
   LinesEditor,
   ListEditor,
+  MediaField,
   NumberField,
 } from "./fields";
 import { newId } from "../utils/media";
 
 type Tab =
   | "geral"
+  | "abertura"
   | "aniversario"
   | "sobre"
   | "historia"
   | "motivos"
   | "memorias"
+  | "videos"
+  | "voz"
+  | "humor"
   | "carta"
   | "acolhimento"
+  | "interacoes"
+  | "fecho"
   | "surpresa"
   | "musica"
   | "tema";
 
 const TABS: { id: Tab; label: string }[] = [
   { id: "geral", label: "Geral" },
+  { id: "abertura", label: "Abertura" },
   { id: "aniversario", label: "Aniversário" },
   { id: "sobre", label: "Sobre ela" },
   { id: "historia", label: "Nossa história" },
   { id: "motivos", label: "Motivos" },
   { id: "memorias", label: "Memórias" },
+  { id: "videos", label: "Vídeos" },
+  { id: "voz", label: "Minha voz" },
+  { id: "humor", label: "Como você está" },
   { id: "carta", label: "Carta" },
   { id: "acolhimento", label: "Acolhimento" },
+  { id: "interacoes", label: "Interações" },
+  { id: "fecho", label: "Jogo e final" },
   { id: "surpresa", label: "Mensagens surpresa" },
   { id: "musica", label: "Música" },
   { id: "tema", label: "Tema" },
@@ -206,13 +220,19 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
 
           <div className="flex flex-col gap-5 pb-24">
             {tab === "geral" && <GeneralTab content={content} set={set} />}
+            {tab === "abertura" && <OpeningTab content={content} set={set} />}
             {tab === "aniversario" && <BirthdayTab content={content} set={set} />}
             {tab === "sobre" && <AboutTab content={content} set={set} />}
             {tab === "historia" && <TimelineTab content={content} set={set} />}
             {tab === "motivos" && <ReasonsTab content={content} set={set} />}
             {tab === "memorias" && <MemoriesTab content={content} set={set} />}
+            {tab === "videos" && <VideosTab content={content} set={set} />}
+            {tab === "voz" && <VoiceTab content={content} set={set} />}
+            {tab === "humor" && <MoodTab content={content} set={set} />}
             {tab === "carta" && <LetterTab content={content} set={set} />}
             {tab === "acolhimento" && <SupportTab content={content} set={set} />}
+            {tab === "interacoes" && <InteractionsTab content={content} set={set} />}
+            {tab === "fecho" && <EndingTab content={content} set={set} />}
             {tab === "surpresa" && (
               <Card title="Mensagens surpresa" hint="Aparecem de vez em quando enquanto ela navega.">
                 <LinesEditor
@@ -514,5 +534,259 @@ function ThemeTab({ content, set }: TabProps) {
         Brilho nos textos de destaque
       </label>
     </Card>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Abas novas                                                         */
+/* ------------------------------------------------------------------ */
+
+function Toggle({
+  label,
+  value,
+  onChange,
+  hint,
+}: {
+  label: string;
+  value: boolean;
+  onChange: (v: boolean) => void;
+  hint?: string;
+}) {
+  return (
+    <label className="flex cursor-pointer items-start gap-3">
+      <input
+        type="checkbox"
+        checked={value}
+        onChange={(e) => onChange(e.target.checked)}
+        className="mt-1 h-4 w-4 accent-[var(--accent)]"
+      />
+      <span>
+        <span className="block text-sm text-pergaminho/90">{label}</span>
+        {hint && <span className="block text-xs text-nevoa">{hint}</span>}
+      </span>
+    </label>
+  );
+}
+
+function OpeningTab({ content, set }: TabProps) {
+  const o = content.opening;
+  return (
+    <>
+      <Card
+        title="Abertura"
+        hint="A primeira tela. Você pode usar {nome}, {apelido} e {meunome} — o site troca pelos nomes configurados na aba Geral."
+      >
+        <Field label="Linha pequena no topo" value={o.overline} onChange={(v) => set((c) => void (c.opening.overline = v))} />
+        <div>
+          <span className="field-label">Frases (aparecem uma a uma)</span>
+          <LinesEditor lines={o.lines} onChange={(v) => set((c) => void (c.opening.lines = v))} />
+        </div>
+        <Field label="Frase final em destaque" value={o.highlight} onChange={(v) => set((c) => void (c.opening.highlight = v))} />
+        <Field label="Texto do botão" value={o.button} onChange={(v) => set((c) => void (c.opening.button = v))} />
+      </Card>
+    </>
+  );
+}
+
+function VideosTab({ content, set }: TabProps) {
+  const v = content.videos;
+  return (
+    <Card
+      title="Vídeos"
+      hint="Coloque os arquivos .mp4 em public/assets/videos/ e informe o caminho. A seção some sozinha se não houver nenhum vídeo."
+    >
+      <Toggle
+        label="Mostrar a seção de vídeos"
+        value={v.enabled}
+        onChange={(b) => set((c) => void (c.videos.enabled = b))}
+      />
+      <Field label="Título da seção" value={v.title} onChange={(x) => set((c) => void (c.videos.title = x))} />
+      <AreaField label="Frase de introdução" rows={2} value={v.intro} onChange={(x) => set((c) => void (c.videos.intro = x))} />
+      <ListEditor
+        items={v.items}
+        onChange={(items) => set((c) => void (c.videos.items = items))}
+        create={() => ({ id: newId("v"), title: "", date: "", message: "", src: "", poster: "" })}
+        addLabel="Adicionar vídeo"
+        itemLabel={(i, k) => i.title || `Vídeo ${k + 1}`}
+        render={(item, update) => (
+          <>
+            <Field label="Título" value={item.title} onChange={(x) => update({ ...item, title: x })} />
+            <Field label="Data (opcional)" value={item.date} onChange={(x) => update({ ...item, date: x })} />
+            <MediaField
+              label="Arquivo do vídeo"
+              folder="videos"
+              accept="video/*"
+              value={item.src}
+              onChange={(x) => update({ ...item, src: x })}
+              hint="Também aceita uma URL direta de .mp4."
+            />
+            <ImageField label="Capa (opcional)" value={item.poster ?? ""} onChange={(x) => update({ ...item, poster: x })} />
+            <AreaField label="Mensagem" value={item.message} onChange={(x) => update({ ...item, message: x })} />
+          </>
+        )}
+      />
+    </Card>
+  );
+}
+
+function VoiceTab({ content, set }: TabProps) {
+  const v = content.voice;
+  return (
+    <Card
+      title="Minha voz"
+      hint="Mensagens de áudio. Grave aqui mesmo ou use arquivos em public/assets/audio/."
+    >
+      <Toggle
+        label="Mostrar a seção de áudios"
+        value={v.enabled}
+        onChange={(b) => set((c) => void (c.voice.enabled = b))}
+      />
+      <Field label="Título da seção" value={v.title} onChange={(x) => set((c) => void (c.voice.title = x))} />
+      <AreaField label="Frase de introdução" rows={2} value={v.intro} onChange={(x) => set((c) => void (c.voice.intro = x))} />
+      <ListEditor
+        items={v.items}
+        onChange={(items) => set((c) => void (c.voice.items = items))}
+        create={() => ({ id: newId("a"), title: "", description: "", src: "" })}
+        addLabel="Adicionar áudio"
+        itemLabel={(i, k) => i.title || `Áudio ${k + 1}`}
+        render={(item, update) => (
+          <>
+            <Field label="Título" value={item.title} onChange={(x) => update({ ...item, title: x })} />
+            <AreaField
+              label="Quando ouvir"
+              rows={2}
+              value={item.description}
+              onChange={(x) => update({ ...item, description: x })}
+            />
+            <MediaField
+              label="Arquivo de áudio"
+              folder="audio"
+              accept="audio/*"
+              value={item.src}
+              onChange={(x) => update({ ...item, src: x })}
+            />
+            <AudioRecorderField onUse={(dataUrl) => update({ ...item, src: dataUrl })} />
+          </>
+        )}
+      />
+    </Card>
+  );
+}
+
+function MoodTab({ content, set }: TabProps) {
+  const m = content.mood;
+  return (
+    <Card
+      title="Como você está agora?"
+      hint="Ela escolhe como está se sentindo e recebe a mensagem que você escreveu para aquele estado. É a parte que ela mais vai reabrir nos dias difíceis."
+    >
+      <Toggle label="Mostrar esta seção" value={m.enabled} onChange={(b) => set((c) => void (c.mood.enabled = b))} />
+      <Field label="Título" value={m.title} onChange={(x) => set((c) => void (c.mood.title = x))} />
+      <AreaField label="Convite (texto menor abaixo do título)" rows={2} value={m.question} onChange={(x) => set((c) => void (c.mood.question = x))} />
+      <ListEditor
+        items={m.options}
+        onChange={(items) => set((c) => void (c.mood.options = items))}
+        create={() => ({ id: newId("mo"), label: "", message: "", closing: "" })}
+        addLabel="Adicionar estado"
+        itemLabel={(i, k) => i.label || `Estado ${k + 1}`}
+        render={(item, update) => (
+          <>
+            <Field label="Como ela se sente (texto do botão)" value={item.label} onChange={(x) => update({ ...item, label: x })} />
+            <AreaField
+              label="Mensagem"
+              rows={5}
+              value={item.message}
+              onChange={(x) => update({ ...item, message: x })}
+              hint="Escreva como se estivesse falando com ela naquele momento."
+            />
+            <Field label="Frase de fecho (opcional)" value={item.closing ?? ""} onChange={(x) => update({ ...item, closing: x })} />
+          </>
+        )}
+      />
+      <Field label="Frase final da seção" value={m.footer} onChange={(x) => set((c) => void (c.mood.footer = x))} />
+    </Card>
+  );
+}
+
+function InteractionsTab({ content, set }: TabProps) {
+  const b = content.breathing;
+  const h = content.holdHand;
+  const w = content.wish;
+  return (
+    <>
+      <Card title="Respira comigo" hint="Círculo de respiração guiada dentro da seção 'Quando tudo parecer pesado'.">
+        <Toggle label="Ativar" value={b.enabled} onChange={(x) => set((c) => void (c.breathing.enabled = x))} />
+        <Field label="Texto do botão" value={b.label} onChange={(x) => set((c) => void (c.breathing.label = x))} />
+        <div className="grid grid-cols-2 gap-3">
+          <Field label="Palavra ao inspirar" value={b.inhale} onChange={(x) => set((c) => void (c.breathing.inhale = x))} />
+          <NumberField label="Segundos" min={1} max={12} value={b.inhaleSeconds} onChange={(x) => set((c) => void (c.breathing.inhaleSeconds = x))} />
+          <Field label="Palavra ao segurar" value={b.hold} onChange={(x) => set((c) => void (c.breathing.hold = x))} />
+          <NumberField label="Segundos" min={0} max={12} value={b.holdSeconds} onChange={(x) => set((c) => void (c.breathing.holdSeconds = x))} />
+          <Field label="Palavra ao soltar" value={b.exhale} onChange={(x) => set((c) => void (c.breathing.exhale = x))} />
+          <NumberField label="Segundos" min={1} max={14} value={b.exhaleSeconds} onChange={(x) => set((c) => void (c.breathing.exhaleSeconds = x))} />
+        </div>
+        <NumberField label="Quantos ciclos" min={1} max={12} value={b.cycles} onChange={(x) => set((c) => void (c.breathing.cycles = x))} />
+        <Field label="Mensagem ao terminar" value={b.endMessage} onChange={(x) => set((c) => void (c.breathing.endMessage = x))} />
+      </Card>
+
+      <Card title="Segura aqui" hint="Ela pressiona e segura na tela; a luz cresce e a sua mensagem aparece.">
+        <Toggle label="Ativar" value={h.enabled} onChange={(x) => set((c) => void (c.holdHand.enabled = x))} />
+        <Field label="Título da seção" value={h.title} onChange={(x) => set((c) => void (c.holdHand.title = x))} />
+        <Field label="Texto antes de segurar" value={h.prompt} onChange={(x) => set((c) => void (c.holdHand.prompt = x))} />
+        <Field label="Texto enquanto segura" value={h.holding} onChange={(x) => set((c) => void (c.holdHand.holding = x))} />
+        <NumberField label="Segundos para completar" min={2} max={15} value={h.seconds} onChange={(x) => set((c) => void (c.holdHand.seconds = x))} />
+        <AreaField label="Mensagem revelada" rows={4} value={h.message} onChange={(x) => set((c) => void (c.holdHand.message = x))} />
+      </Card>
+
+      <Card title="Estrela dos desejos" hint="No finalzinho: ela toca, uma estrela cadente atravessa o céu e sua mensagem aparece.">
+        <Toggle label="Ativar" value={w.enabled} onChange={(x) => set((c) => void (c.wish.enabled = x))} />
+        <Field label="Convite" value={w.prompt} onChange={(x) => set((c) => void (c.wish.prompt = x))} />
+        <AreaField label="Mensagem depois do pedido" rows={3} value={w.message} onChange={(x) => set((c) => void (c.wish.message = x))} />
+      </Card>
+    </>
+  );
+}
+
+function EndingTab({ content, set }: TabProps) {
+  const g = content.game;
+  const f = content.final;
+  const fu = content.future;
+  return (
+    <>
+      <Card title="A brincadeira" hint="Qualquer resposta leva ao ∞ — é essa a graça.">
+        <Field label="Pergunta" value={g.question} onChange={(x) => set((c) => void (c.game.question = x))} />
+        <div>
+          <span className="field-label">Opções de resposta</span>
+          <LinesEditor lines={g.options} onChange={(x) => set((c) => void (c.game.options = x))} addLabel="Adicionar opção" />
+        </div>
+        <Field label="Resposta imediata" value={g.wrong} onChange={(x) => set((c) => void (c.game.wrong = x))} />
+        <Field label="Explicação" value={g.explain} onChange={(x) => set((c) => void (c.game.explain = x))} />
+        <Field label="Texto de 'tentar de novo'" value={g.retry} onChange={(x) => set((c) => void (c.game.retry = x))} />
+      </Card>
+
+      <Card title="O futuro">
+        <Field label="Título" value={fu.title} onChange={(x) => set((c) => void (c.future.title = x))} />
+        <LinesEditor lines={fu.lines} onChange={(x) => set((c) => void (c.future.lines = x))} />
+        <Field label="Frase final" value={fu.closing} onChange={(x) => set((c) => void (c.future.closing = x))} />
+      </Card>
+
+      <Card title="Encerramento">
+        <div>
+          <span className="field-label">Frases finais (uma a uma)</span>
+          <LinesEditor lines={f.lines} onChange={(x) => set((c) => void (c.final.lines = x))} />
+        </div>
+        <Field label="Frase em destaque" value={f.love} onChange={(x) => set((c) => void (c.final.love = x))} />
+        <AreaField
+          label="Promessa"
+          rows={3}
+          value={f.promise}
+          onChange={(x) => set((c) => void (c.final.promise = x))}
+          hint="Cada linha aparece separadamente."
+        />
+        <Field label="Frase de fecho" value={f.closing} onChange={(x) => set((c) => void (c.final.closing = x))} />
+        <Field label="Última linha" value={f.birthdayLine} onChange={(x) => set((c) => void (c.final.birthdayLine = x))} />
+        <Field label="Rótulo do contador" value={f.counterLabel} onChange={(x) => set((c) => void (c.final.counterLabel = x))} />
+      </Card>
+    </>
   );
 }

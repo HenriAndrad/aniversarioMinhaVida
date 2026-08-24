@@ -1,0 +1,6 @@
+Coloque aqui os áudios da sua voz (.mp3, .m4a, .webm).
+No painel, em "Minha voz", informe o caminho: /assets/audio/nome-do-arquivo.mp3
+
+Dica: gravar pelo painel funciona, mas para o site publicado é melhor
+baixar o áudio gravado e salvar nesta pasta — fica mais leve e não ocupa
+o armazenamento do navegador.

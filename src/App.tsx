@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { MotionConfig } from "framer-motion";
-import { ContentProvider } from "./store/contentStore";
+import { ContentProvider, useContent } from "./store/contentStore";
 import Starfield from "./components/Starfield";
 import MusicPlayer, { type MusicPlayerHandle } from "./components/MusicPlayer";
 import SurpriseMessages from "./components/SurpriseMessages";
@@ -11,6 +11,10 @@ import AboutHer from "./sections/AboutHer";
 import TimelineSection from "./sections/TimelineSection";
 import ReasonsSection from "./sections/ReasonsSection";
 import MemoriesSection from "./sections/MemoriesSection";
+import VideoSection from "./sections/VideoSection";
+import MoodSection from "./sections/MoodSection";
+import VoiceSection from "./sections/VoiceSection";
+import HoldHandSection from "./sections/HoldHandSection";
 import { HeavyDaysSection, GoodAndBadDaysSection, YouCanSection } from "./sections/SupportSections";
 import OpenWhenNeeded from "./sections/OpenWhenNeeded";
 import LetterSection from "./sections/LetterSection";
@@ -18,19 +22,24 @@ import GameSection from "./sections/GameSection";
 import { FutureSection, FinalSection } from "./sections/FutureAndFinal";
 import AdminApp from "./admin/AdminApp";
 
-const NAV_SECTIONS = [
+/** Todas as seções possíveis, na ordem em que aparecem. */
+const ALL_SECTIONS = [
   { id: "aniversario", label: "Feliz aniversário" },
   { id: "voce", label: "Você" },
   { id: "historia", label: "Nossa história" },
   { id: "motivos", label: "Por que eu amo você" },
   { id: "momentos", label: "Momentos" },
+  { id: "videos", label: "Vídeos" },
+  { id: "como-esta", label: "Como você está" },
   { id: "refugio", label: "Quando pesar" },
   { id: "dias", label: "Dias bons e ruins" },
   { id: "forca", label: "Você consegue" },
   { id: "abraco", label: "Abra quando precisar" },
+  { id: "voz", label: "Minha voz" },
   { id: "carta", label: "A carta" },
   { id: "jogo", label: "Uma pergunta" },
   { id: "futuro", label: "O futuro" },
+  { id: "mao", label: "Segura aqui" },
   { id: "final", label: "Para sempre" },
 ];
 
@@ -46,6 +55,7 @@ function useHashRoute(): string {
 }
 
 function Experience() {
+  const { content } = useContent();
   const [entered, setEntered] = useState(false);
   const musicRef = useRef<MusicPlayerHandle>(null);
 
@@ -58,13 +68,17 @@ function Experience() {
       historia: "memories",
       motivos: "memories",
       momentos: "memories",
+      videos: "memories",
+      "como-esta": "emotional",
       refugio: "emotional",
       dias: "emotional",
       forca: "emotional",
       abraco: "emotional",
+      voz: "emotional",
       carta: "emotional",
       jogo: "ending",
       futuro: "ending",
+      mao: "ending",
       final: "ending",
     };
     const observer = new IntersectionObserver(
@@ -82,6 +96,14 @@ function Experience() {
     return () => observer.disconnect();
   }, [entered]);
 
+  // As seções opcionais só entram na navegação quando têm conteúdo
+  const hidden = new Set<string>();
+  if (!content.videos.enabled || content.videos.items.every((v) => !v.src.trim())) hidden.add("videos");
+  if (!content.mood.enabled || content.mood.options.length === 0) hidden.add("como-esta");
+  if (!content.voice.enabled || content.voice.items.every((v) => !v.src.trim())) hidden.add("voz");
+  if (!content.holdHand.enabled) hidden.add("mao");
+  const navSections = ALL_SECTIONS.filter((s) => !hidden.has(s.id));
+
   return (
     <>
       <Starfield />
@@ -98,20 +120,24 @@ function Experience() {
       <SurpriseMessages active={entered} />
       {entered && (
         <>
-          <ProgressNav sections={NAV_SECTIONS} />
+          <ProgressNav sections={navSections} />
           <main>
             <BirthdaySection />
             <AboutHer />
             <TimelineSection />
             <ReasonsSection />
             <MemoriesSection />
+            <VideoSection />
+            <MoodSection />
             <HeavyDaysSection />
             <GoodAndBadDaysSection />
             <YouCanSection />
             <OpenWhenNeeded />
+            <VoiceSection />
             <LetterSection />
             <GameSection />
             <FutureSection />
+            <HoldHandSection />
             <FinalSection />
           </main>
         </>

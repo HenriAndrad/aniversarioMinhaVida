@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { useScroll, useTransform, useMotionValueEvent, motion } from "framer-motion";
 import { LineSequence, Reveal, Section } from "../components/Reveal";
 import { useContent } from "../store/contentStore";
+import Breathing from "../components/Breathing";
 
 /**
  * "Quando tudo parecer pesado..." — o refúgio do site.
@@ -23,6 +24,11 @@ export function HeavyDaysSection() {
           gap="gap-24 sm:gap-32"
           lineClassName="text-pergaminho/85 font-light"
         />
+      </div>
+      <div className="mt-32">
+        <Reveal>
+          <Breathing />
+        </Reveal>
       </div>
     </Section>
   );

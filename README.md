@@ -110,6 +110,48 @@ Observações:
   site é público: não coloque nada ali que você não queira que outra pessoa
   possa ver.
 
+## O que ela pode fazer no site (as interações)
+
+| Interação | Onde | O que acontece |
+| --- | --- | --- |
+| **Como você está agora?** | depois das memórias | Ela escolhe o estado dela (bem, cansada, triste, com medo, não sei) e recebe a mensagem que você escreveu para aquele momento. É a parte que ela mais vai reabrir em dias difíceis. |
+| **Respira comigo** | dentro de "Quando tudo parecer pesado" | Um círculo que guia a respiração no ritmo que você configurar (4-4-6 por padrão). |
+| **Vídeos** | depois das memórias | Galeria com capa e player em tela cheia. |
+| **Minha voz** | depois de "Abra quando precisar" | Mensagens de áudio suas, com player em forma de onda. Some sozinho se não houver áudio. |
+| **Segura aqui** | antes do final | Ela pressiona e segura a tela; a luz cresce, o círculo pulsa como um batimento e, ao completar, sua mensagem aparece. |
+| **Estrela dos desejos** | no finalzinho | Ela toca, uma estrela cadente atravessa a tela e sua mensagem aparece. |
+| **Estrelas dos motivos** | "Por que eu amo você" | Cada motivo é uma estrela clicável. |
+| **A brincadeira do ∞** | perto do fim | Qualquer resposta está errada — não existe opção grande o suficiente. |
+| **Envelope da carta** | "A carta" | A carta abre com animação de envelope. |
+| **Contador ao vivo** | final | Dias, horas, minutos e segundos juntos. |
+
+Cada uma dessas seções pode ser **ligada ou desligada** no painel, e some
+sozinha se estiver sem conteúdo.
+
+## O painel: o que dá para editar
+
+Abas do painel (`#/admin`): Geral, Abertura, Aniversário, Sobre ela, Nossa
+história, Motivos, Memórias, **Vídeos**, **Minha voz**, **Como você está**,
+Carta, Acolhimento, **Interações**, **Jogo e final**, Mensagens surpresa,
+Música, Tema.
+
+Não há nenhum texto fixo no código: **tudo** o que ela lê sai do painel —
+até a frase da abertura e o rótulo do contador.
+
+Nos textos você pode usar `{nome}`, `{apelido}` e `{meunome}`; o site troca
+pelos nomes configurados na aba Geral.
+
+### Fotos, vídeos e áudios
+
+- **Fotos**: upload direto no painel (comprimidas automaticamente) ou caminho
+  em `public/assets/photos/`.
+- **Vídeos**: como vídeo não cabe no armazenamento do navegador, coloque o
+  `.mp4` em `public/assets/videos/` e informe o caminho — o botão "Escolher
+  arquivo" já monta o caminho certo para você.
+- **Áudios**: dá para **gravar sua voz direto no painel**. Áudios curtos podem
+  ser usados na hora; nos longos, use "Baixar" e salve em
+  `public/assets/audio/` (recomendado para o site publicado).
+
 ## Estrutura
 
 ```text

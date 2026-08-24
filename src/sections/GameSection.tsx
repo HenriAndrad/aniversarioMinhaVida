@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Reveal, Section } from "../components/Reveal";
+import { useContent } from "../store/contentStore";
 
 type Stage = "question" | "wrong" | "explain" | "infinity";
 
@@ -9,6 +10,8 @@ type Stage = "question" | "wrong" | "explain" | "infinity";
  * porque não existe opção grande o suficiente. ∞
  */
 export default function GameSection() {
+  const { content } = useContent();
+  const g = content.game;
   const [stage, setStage] = useState<Stage>("question");
 
   const answer = () => {
@@ -29,12 +32,12 @@ export default function GameSection() {
             >
               <Reveal>
                 <p className="font-display text-3xl italic sm:text-4xl">
-                  Quanto você acha que eu te amo?
+                  {g.question}
                 </p>
               </Reveal>
               <Reveal delay={0.15}>
                 <div className="flex flex-wrap justify-center gap-3">
-                  {["Pouco", "Muito", "Absurdamente muito"].map((opt) => (
+                  {g.options.map((opt) => (
                     <button key={opt} type="button" className="btn-ghost" onClick={answer}>
                       {opt}
                     </button>
@@ -52,7 +55,7 @@ export default function GameSection() {
               exit={{ opacity: 0 }}
               className="font-display text-4xl italic"
             >
-              Errado.
+              {g.wrong}
             </motion.p>
           )}
 
@@ -64,7 +67,7 @@ export default function GameSection() {
               exit={{ opacity: 0 }}
               className="max-w-prose2 font-display text-2xl italic leading-relaxed sm:text-3xl"
             >
-              Não existe uma opção grande o suficiente.
+              {g.explain}
             </motion.p>
           )}
 
@@ -87,7 +90,7 @@ export default function GameSection() {
                 onClick={() => setStage("question")}
                 className="text-xs uppercase tracking-[0.3em] text-nevoa transition-colors hover:text-pergaminho"
               >
-                tentar de novo
+                {g.retry}
               </button>
             </motion.div>
           )}

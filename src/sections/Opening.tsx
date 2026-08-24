@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useContent } from "../store/contentStore";
+import { applyTokens } from "../utils/text";
 
 /**
  * Abertura: tela cheia, silenciosa, frases surgindo uma a uma.
@@ -8,15 +9,11 @@ import { useContent } from "../store/contentStore";
  */
 export default function Opening({ onEnter }: { onEnter: () => void }) {
   const { content } = useContent();
-  const nickname = content.relationship.nickname || content.relationship.herName;
   const reduced = useReducedMotion();
+  const o = content.opening;
+  const token = (s: string) => applyTokens(s, content.relationship);
 
-  const lines = [
-    "Hoje não é um dia qualquer...",
-    "Hoje é o dia de celebrar você.",
-    content.relationship.herName + ".",
-    "Feliz aniversário.",
-  ];
+  const lines = [...o.lines.map(token), token(o.highlight)];
 
   const [step, setStep] = useState(0);
   const [leaving, setLeaving] = useState(false);
@@ -42,7 +39,7 @@ export default function Opening({ onEnter }: { onEnter: () => void }) {
       transition={{ duration: 1.1, ease: "easeInOut" }}
     >
       <p className="mb-10 font-body text-xs uppercase tracking-[0.35em] text-nevoa">
-        {nickname}, eu fiz uma coisa para você
+        {token(o.overline)}
       </p>
 
       <div className="flex min-h-[10rem] items-center justify-center">
@@ -69,10 +66,10 @@ export default function Opening({ onEnter }: { onEnter: () => void }) {
               className="flex flex-col items-center gap-8 text-center"
             >
               <p className="font-display text-4xl italic text-glow sm:text-6xl">
-                <span className="font-accent">Feliz aniversário.</span>
+                <span className="font-accent">{token(o.highlight)}</span>
               </p>
               <button type="button" className="btn-primary" onClick={enter}>
-                Entrar no nosso mundo
+                {token(o.button)}
                 <span aria-hidden="true">❤️</span>
               </button>
             </motion.div>

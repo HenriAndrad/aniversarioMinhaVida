@@ -12,6 +12,17 @@ import type { SiteContent } from "../types/content";
 export const defaultContent: SiteContent = {
   version: 1,
 
+  opening: {
+    overline: "{apelido}, eu fiz uma coisa para você",
+    lines: [
+      "Hoje não é um dia qualquer...",
+      "Hoje é o dia de celebrar você.",
+      "{nome}.",
+    ],
+    highlight: "Feliz aniversário.",
+    button: "Entrar no nosso mundo",
+  },
+
   relationship: {
     herName: "Fernanda Wegner",
     yourName: "Henrique",
@@ -118,6 +129,66 @@ export const defaultContent: SiteContent = {
     },
   ],
 
+  videos: {
+    enabled: true,
+    title: "Coisas que eu quis te mostrar",
+    intro: "[ADICIONAR TEXTO] Uma frase curta para apresentar os vídeos.",
+    items: [
+      {
+        id: "v1",
+        title: "[ADICIONAR TÍTULO]",
+        date: "[ADICIONAR DATA]",
+        message: "[ADICIONAR TEXTO] O que você quer que ela sinta ao ver esse vídeo.",
+        src: "", // ex.: /assets/videos/nosso-video.mp4
+        poster: "",
+      },
+    ],
+  },
+
+  mood: {
+    enabled: true,
+    title: "Como você está agora?",
+    question: "Não precisa fingir aqui. Escolhe o que estiver mais perto da verdade.",
+    options: [
+      {
+        id: "mo1",
+        label: "Estou bem",
+        message:
+          "[ADICIONAR TEXTO] Escreva algo para o dia em que ela estiver bem — comemore com ela.",
+        closing: "",
+      },
+      {
+        id: "mo2",
+        label: "Estou cansada",
+        message:
+          "[ADICIONAR TEXTO] Escreva algo para quando ela estiver exausta. Sem cobrança, só descanso.",
+        closing: "",
+      },
+      {
+        id: "mo3",
+        label: "Estou triste",
+        message:
+          "[ADICIONAR TEXTO] Escreva algo para os dias tristes. Não tente consertar — só fique perto.",
+        closing: "",
+      },
+      {
+        id: "mo4",
+        label: "Estou com medo",
+        message:
+          "[ADICIONAR TEXTO] Escreva algo para quando ela estiver com medo do que vem pela frente.",
+        closing: "",
+      },
+      {
+        id: "mo5",
+        label: "Não sei",
+        message:
+          "[ADICIONAR TEXTO] Escreva algo para quando ela não souber nomear o que sente. Tudo bem não saber.",
+        closing: "",
+      },
+    ],
+    footer: "Seja qual for a resposta, eu continuo aqui.",
+  },
+
   heavyDays: {
     title: "Quando tudo parecer pesado...",
     lines: [
@@ -131,6 +202,19 @@ export const defaultContent: SiteContent = {
       "Eu estou aqui.",
       "Eu vou continuar segurando sua mão.",
     ],
+  },
+
+  breathing: {
+    enabled: true,
+    label: "Respira comigo",
+    inhale: "Inspira",
+    hold: "Segura",
+    exhale: "Solta",
+    inhaleSeconds: 4,
+    holdSeconds: 4,
+    exhaleSeconds: 6,
+    cycles: 4,
+    endMessage: "Pronto. Um minuto inteiro só seu.",
   },
 
   goodAndBadDays: {
@@ -172,6 +256,20 @@ export const defaultContent: SiteContent = {
     ],
   },
 
+  voice: {
+    enabled: true,
+    title: "Quando quiser me ouvir",
+    intro: "Aperte o play. Sou eu.",
+    items: [
+      {
+        id: "a1",
+        title: "[ADICIONAR TÍTULO] ex.: Para os dias difíceis",
+        description: "[ADICIONAR TEXTO] Quando ela deveria ouvir esse áudio.",
+        src: "", // grave no painel ou use /assets/audio/nome.mp3
+      },
+    ],
+  },
+
   loveLetter: {
     title: "Tem uma coisa que eu preciso te dizer...",
     paragraphs: [
@@ -180,6 +278,30 @@ export const defaultContent: SiteContent = {
       "[ADICIONAR TEXTO] Escreva do seu jeito. É isso que vai fazer ela sentir que é sua.",
     ],
     signature: "Com todo o meu amor, Henrique.",
+  },
+
+  game: {
+    question: "Quanto você acha que eu te amo?",
+    options: ["Pouco", "Muito", "Absurdamente muito"],
+    wrong: "Errado.",
+    explain: "Não existe uma opção grande o suficiente.",
+    retry: "tentar de novo",
+  },
+
+  holdHand: {
+    enabled: true,
+    title: "Segura aqui",
+    prompt: "Pressione e segure",
+    holding: "Estou aqui.",
+    message:
+      "[ADICIONAR TEXTO] Escreva o que ela lê depois de segurar. Algo curto e verdadeiro.",
+    seconds: 5,
+  },
+
+  wish: {
+    enabled: true,
+    prompt: "toque no céu e faça um pedido",
+    message: "[ADICIONAR TEXTO] O que ela lê depois do pedido.",
   },
 
   surpriseMessages: [
@@ -210,9 +332,12 @@ export const defaultContent: SiteContent = {
       "Obrigado por ser você.",
       "E, acima de tudo...",
     ],
+    love: "Eu te amo.",
     promise:
       "Nos dias em que o mundo parecer leve.\nE nos dias em que ele parecer pesado demais.\nEu estarei aqui.",
     closing: "Enquanto você quiser minha mão, ela será sua.",
+    birthdayLine: "Feliz aniversário, meu amor.",
+    counterLabel: "juntos há",
   },
 
   music: {
