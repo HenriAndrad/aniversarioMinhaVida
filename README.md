@@ -174,3 +174,4 @@ public/assets/
 - navegação por teclado, `aria-labels`, foco visível;
 - lazy loading de imagens; canvas único e leve para as estrelas;
 - mobile-first (testado a partir de 360px).
+# calendaryUemgLife
